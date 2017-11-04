@@ -60,10 +60,14 @@ class TwigDataCollector extends BaseCollector implements LateDataCollectorInterf
 
     public function getTemplates()
     {
-        $registry = $this->getTemplatePathRegistry();
+        $pathMap = $this->getTemplatePathRegistry()->getPathMap();
         $templates = [];
         foreach (parent::getTemplates() as $template => $count) {
-            $templates[sprintf('%s (%s)', $template, $registry->getTemplatePath($template))] = $count;
+            if (isset($pathMap[$template])) {
+                $templates[sprintf('%s (%s)', $template, $pathMap[$template])] = $count;
+            } else {
+                $templates[$template] = $count;
+            }
         }
 
         return $templates;
